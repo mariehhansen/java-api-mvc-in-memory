@@ -13,16 +13,14 @@ import java.util.ArrayList;
 public class ProductController {
 
     private ProductRepository productRepository;
-    private ArrayList<Product> products;
 
     public ProductController() {
         this.productRepository = new ProductRepository();
-        products = new ArrayList<>();
     }
 
     @GetMapping
     public ArrayList<Product> getAll() {
-        return this.productRepository.findAll();
+        return productRepository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -38,26 +36,31 @@ public class ProductController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(@RequestBody Product product) {
-        this.products.add(product);
+        if (productRepository.getProducts().contains(product)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not cool.");
+        }
+        productRepository.create(product);
         return product;
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Product update(@PathVariable (name = "id") int id, @RequestBody Product product) {
-        if (id < this.products.size()) {
-            this.products.get(id).setType(product.getType());
-            this.products.get(id).setCategory(product.getCategory());
-            this.products.get(id).setPrice(product.getPrice());
-            return this.products.get(id);
+        if (id < productRepository.getProducts().size()) {
+            productRepository.getProducts().get(id).setType(product.getType());
+            productRepository.getProducts().get(id).setCategory(product.getCategory());
+            productRepository.getProducts().get(id).setPrice(product.getPrice());
+            return productRepository.getProducts().get(id);
         }
         return null;
     }
 
     @DeleteMapping("/{id}")
     public Product delete(@PathVariable (name = "id") int id) {
-        if (id < this.products.size()) {
-            return this.products.remove(id);
+        if (id < productRepository.getProducts().size()) {
+            Product remove = productRepository.find(id);
+            productRepository.updateId(id);
+            return productRepository.getProducts().remove(remove.getId());
         }
         return null;
     }

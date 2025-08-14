@@ -13,13 +13,20 @@ public class ProductRepository {
     public ProductRepository() {
         this.products = new ArrayList<>();
 
-        this.products.add(new Product(this.id++, "Bagel", "Food",  20));
-        this.products.add(new Product(this.id ++, "Coffee", "Food", 15));
+        //this.products.add(new Product(this.id++, "Bagel", "Food",  20));
+        //this.products.add(new Product(this.id ++, "Coffee", "Food", 15));
     }
 
-    public void create(String type, String category, int price) {
-        Product product = new Product(this.id ++, type, category, price);
+    public void create(Product product) {
         this.products.add(product);
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 
     public ArrayList<Product> findAll() {
@@ -31,5 +38,11 @@ public class ProductRepository {
                 .filter(product -> product.getId() == id)
                 .findFirst()
                 .orElseThrow();
+    }
+
+    public void updateId(int id) {
+        for (int i = id; i < products.size() - 1; i ++) {
+            products.get(i+1).setId(i);
+        }
     }
 }

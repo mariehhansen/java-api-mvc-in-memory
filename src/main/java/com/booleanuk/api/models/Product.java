@@ -2,16 +2,25 @@ package com.booleanuk.api.models;
 
 public class Product {
 
+    private static int nextId = 0;
     private int id;
     private String type;
     private String category;
     private int price;
 
     public Product(int id, String type, String category, int price) {
-        this.id = id;
+        this.id = nextId ++;
         this.type = type;
         this.category = category;
         this.price = price;
+    }
+
+    public static int getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(int nextId) {
+        Product.nextId = nextId;
     }
 
     public int getId() {
